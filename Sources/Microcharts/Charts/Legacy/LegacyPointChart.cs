@@ -83,6 +83,11 @@ namespace Microcharts
         public SKPaint YAxisLinesPaint { get; set; }
 
         /// <summary>
+        /// Y Axis Label formatter
+        /// </summary>
+        public Func<float, string> YAxisLabelFormatter { get; set; } = f => f.ToString();
+
+        /// <summary>
         /// Gets or sets the size of the point.
         /// </summary>
         /// <value>The size of the point.</value>
@@ -130,7 +135,7 @@ namespace Microcharts
             {
                 float maxValue = MaxValue;
                 float minValue = MinValue;
-                width = MeasureHelper.CalculateYAxis(ShowYAxisText, ShowYAxisLines, Entries, YAxisMaxTicks, YAxisTextPaint, YAxisPosition, width, false, ref maxValue, ref minValue, out float yAxisXShift, out List<float> yAxisIntervalLabels);
+                width = MeasureHelper.CalculateYAxis(ShowYAxisText, ShowYAxisLines, Entries, YAxisLabelFormatter, YAxisMaxTicks, YAxisTextPaint, YAxisPosition, width, false, ref maxValue, ref minValue, out float yAxisXShift, out List<float> yAxisIntervalLabels);
                 var labels = Entries.Select(x => x.Label).ToArray();
                 var labelSizes = MeasureHelper.MeasureTexts(labels, LabelTextSize);
                 var footerHeight = MeasureHelper.CalculateFooterHeaderHeight(Margin, LabelTextSize, labelSizes, LabelOrientation);
@@ -142,7 +147,7 @@ namespace Microcharts
                 var itemSize = CalculateItemSize(width, height, footerHeight, headerHeight);
                 var origin = CalculateYOrigin(itemSize.Height, headerHeight);
                 var points = CalculatePoints(itemSize, origin, headerHeight, yAxisXShift);
-                DrawHelper.DrawYAxis(ShowYAxisText, ShowYAxisLines, YAxisPosition, YAxisTextPaint, YAxisLinesPaint, Margin, AnimationProgress, MaxValue, ValueRange, canvas, width, yAxisXShift, yAxisIntervalLabels, headerHeight, itemSize, origin);
+                DrawHelper.DrawYAxis(ShowYAxisText, ShowYAxisLines, YAxisPosition, YAxisTextPaint, YAxisLinesPaint, Margin, AnimationProgress, MaxValue, ValueRange, canvas, width, yAxisXShift, yAxisIntervalLabels, YAxisLabelFormatter, headerHeight, itemSize, origin);
 
                 DrawAreas(canvas, points, itemSize, origin, headerHeight);
                 DrawPoints(canvas, points);

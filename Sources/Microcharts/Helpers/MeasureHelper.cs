@@ -68,7 +68,7 @@ namespace Microcharts
             return result;
         }
 
-        internal static int CalculateYAxis(bool showYAxisText, bool showYAxisLines, IEnumerable<ChartEntry> entries, int yAxisMaxTicks, SKPaint yAxisTextPaint, Position yAxisPosition, int width, bool fixedRange, ref float maxValue, ref float minValue, out float yAxisXShift, out List<float> yAxisIntervalLabels)
+        internal static int CalculateYAxis(bool showYAxisText, bool showYAxisLines, IEnumerable<ChartEntry> entries, System.Func<float, string> yAxisLabelFormatter, int yAxisMaxTicks, SKPaint yAxisTextPaint, Position yAxisPosition, int width, bool fixedRange, ref float maxValue, ref float minValue, out float yAxisXShift, out List<float> yAxisIntervalLabels)
         {
             yAxisXShift = 0.0f;
             yAxisIntervalLabels = new List<float>();
@@ -105,8 +105,8 @@ namespace Microcharts
                     .Select(i => (float)(niceMax - (i * tickSpacing)))
                     .ToList();
 
-                var longestYAxisLabel = yAxisIntervalLabels.Aggregate(string.Empty, (max, cur) => max.Length > cur.ToString().Length ? max : cur.ToString());
-                var longestYAxisLabelWidth = MeasureHelper.MeasureTexts(new string[] { longestYAxisLabel }, yAxisTextPaint).Select(b => b.Width).FirstOrDefault();
+                var labels = yAxisIntervalLabels.Select(t => yAxisLabelFormatter(t) + "Z").ToArray();
+                var longestYAxisLabelWidth = MeasureHelper.MeasureTexts(labels, yAxisTextPaint).Max(b => b.Width);
                 yAxisWidth = (int)(width - longestYAxisLabelWidth);
                 if (yAxisPosition == Position.Left)
                 {

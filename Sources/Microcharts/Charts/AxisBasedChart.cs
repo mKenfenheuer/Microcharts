@@ -155,6 +155,11 @@ namespace Microcharts
         /// </summary>
         public SKPaint YAxisLinesPaint { get; set; }
 
+        /// <summary>
+        /// Y Axis Label formatter
+        /// </summary>
+        public Func<float, string> YAxisLabelFormatter { get; set; } = f => f.ToString();
+
         #endregion
 
         #region Methods
@@ -178,7 +183,7 @@ namespace Microcharts
                 float minValue = MinValue;
 
                 //This function might change the min/max value
-                width = MeasureHelper.CalculateYAxis(ShowYAxisText, ShowYAxisLines, entries, YAxisMaxTicks, YAxisTextPaint, YAxisPosition, width, fixedRange, ref maxValue, ref minValue, out float yAxisXShift, out List<float> yAxisIntervalLabels);
+                width = MeasureHelper.CalculateYAxis(ShowYAxisText, ShowYAxisLines, entries, YAxisLabelFormatter, YAxisMaxTicks, YAxisTextPaint, YAxisPosition, width, fixedRange, ref maxValue, ref minValue, out float yAxisXShift, out List<float> yAxisIntervalLabels);
                 float valRange = maxValue - minValue;
 
                 var firstSerie = Series.FirstOrDefault();
@@ -204,7 +209,7 @@ namespace Microcharts
                 var itemSize = CalculateItemSize(nbItems, width, height, footerHeight + headerHeight + legendHeight);
                 var barSize = CalculateBarSize(itemSize, Series.Count());
                 var origin = CalculateYOrigin(itemSize.Height, headerWithLegendHeight, maxValue, minValue, valRange);
-                DrawHelper.DrawYAxis(ShowYAxisText, ShowYAxisLines, YAxisPosition, YAxisTextPaint, YAxisLinesPaint, Margin, AnimationProgress, maxValue, valRange, canvas, width, yAxisXShift, yAxisIntervalLabels, headerHeight, itemSize, origin);
+                DrawHelper.DrawYAxis(ShowYAxisText, ShowYAxisLines, YAxisPosition, YAxisTextPaint, YAxisLinesPaint, Margin, AnimationProgress, maxValue, valRange, canvas, width, yAxisXShift, yAxisIntervalLabels, YAxisLabelFormatter, headerHeight, itemSize, origin);
 
                 int nbSeries = series.Count();
                 for (int serieIndex = 0; serieIndex < nbSeries; serieIndex++)

@@ -160,41 +160,11 @@ namespace Microcharts
         /// </summary>
         public Func<float, string> YAxisLabelFormatter { get; set; } = f => f.ToString();
 
-        /// <summary>
-        /// Show Y Axis Text?
-        /// </summary>
-        public bool ShowXAxisText { get; set; } = false;
-
-        /// <summary>
-        /// Show Y Axis Lines?
-        /// </summary>
-        public bool ShowXAxisLines { get; set; } = false;
-
-        //TODO : calculate this automatically, based on available area height and text height
+        
         /// <summary>
         /// Y Axis Max Ticks
         /// </summary>
-        public int XAxisMaxTicks { get; set; } = 5;
-
-        /// <summary>
-        /// Y Axis Position
-        /// </summary>
-        public Position XAxisPosition { get; set; } = Position.Right;
-
-        /// <summary>
-        /// Y Axis Paint
-        /// </summary>
-        public SKPaint XAxisTextPaint { get; set; }
-
-        /// <summary>
-        /// Y Axis Paint
-        /// </summary>
-        public SKPaint XAxisLinesPaint { get; set; }
-
-        /// <summary>
-        /// Y Axis Label formatter
-        /// </summary>
-        public Func<float, string> XAxisLabelFormatter { get; set; } = f => f.ToString();
+        public int XAxisMaxLabels { get; set; } = 5;
 
         #endregion
 
@@ -220,8 +190,7 @@ namespace Microcharts
 
                 //This function might change the min/max value
                 width = MeasureHelper.CalculateYAxis(ShowYAxisText, ShowYAxisLines, entries, YAxisLabelFormatter, YAxisMaxTicks, YAxisTextPaint, YAxisPosition, width, fixedRange, ref maxValue, ref minValue, out float yAxisXShift, out List<float> yAxisIntervalLabels);
-                height = MeasureHelper.CalculateYAxis(ShowXAxisText, ShowXAxisLines, entries, XAxisLabelFormatter, XAxisMaxTicks, XAxisTextPaint, XAxisPosition, height, fixedRange, ref maxValue, ref minValue, out float yAxisYShift, out List<float> xAxisIntervalLabels);
-
+                
                 float valRange = maxValue - minValue;
 
                 var firstSerie = Series.FirstOrDefault();
@@ -248,9 +217,13 @@ namespace Microcharts
                 var barSize = CalculateBarSize(itemSize, Series.Count());
                 var origin = CalculateYOrigin(itemSize.Height, headerWithLegendHeight, maxValue, minValue, valRange);
                 DrawHelper.DrawYAxis(ShowYAxisText, ShowYAxisLines, YAxisPosition, YAxisTextPaint, YAxisLinesPaint, Margin, AnimationProgress, maxValue, valRange, canvas, width, yAxisXShift, yAxisIntervalLabels, YAxisLabelFormatter, headerHeight, itemSize, origin);
-                DrawHelper.DrawXAxis(ShowXAxisText, ShowXAxisLines, XAxisPosition, XAxisTextPaint, XAxisLinesPaint, Margin, AnimationProgress, maxValue, valRange, canvas, width, yAxisYShift, xAxisIntervalLabels, XAxisLabelFormatter, headerHeight, itemSize, origin);
-
+                
                 int nbSeries = series.Count();
+
+
+                var labelSpacing = labels.Length / (float)(XAxisMaxLabels - 1);
+                float space = 0;
+
                 for (int serieIndex = 0; serieIndex < nbSeries; serieIndex++)
                 {
                     ChartSerie serie = Series.ElementAt(serieIndex);
@@ -262,10 +235,12 @@ namespace Microcharts
                         var itemX = Margin + (itemSize.Width / 2) + (i * (itemSize.Width + Margin)) + yAxisXShift;
 
                         string label = labels[i];
-                        if (!string.IsNullOrEmpty(label))
+                        if (!string.IsNullOrEmpty(label) &&
+                            space <= (i + 1))
                         {
+                            space += labelSpacing;
                             SKRect labelSize = labelSizes[i];
-                            DrawHelper.DrawLabel(canvas, LabelOrientation, YPositionBehavior.None, itemSize, new SKPoint(itemX, height - footerWithLegendHeight + Margin), LabelColor, labelSize, label, LabelTextSize, Typeface);
+                            DrawHelper.DrawLabel(canvas, LabelOrientation, YPositionBehavior.None, itemSize, new SKPoint(itemX, height - footerWithLegendHeight + Margin + labelSize.Height), LabelColor, labelSize, label, LabelTextSize, Typeface);
                         }
                     }
 

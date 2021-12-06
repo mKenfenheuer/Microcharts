@@ -175,10 +175,5 @@ namespace Microcharts
                 canvas.DrawLine(Margin / 2 + @int.Left, @int.Top, @int.Right - Margin / 2, @int.Bottom, yAxisLinesPaint);
             }
         }
-
-        internal static void DrawXAxis(bool showXAxisText, bool showXAxisLines, Position xAxisPosition, SKPaint xAxisTextPaint, SKPaint xAxisLinesPaint, float margin, float animationProgress, float maxValue, float valRange, SKCanvas canvas, int width, float yAxisYShift, List<float> xAxisIntervalLabels, Func<float, string> xAxisLabelFormatter, float headerHeight, SKSize itemSize, float origin)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -131,6 +131,17 @@ namespace Microcharts.Samples
                     LabelTextSize = 42,
                     ValueLabelTextSize= 18,
                     SerieLabelTextSize = 42,
+                    ShowYAxisText = true,
+                    YAxisTextPaint = new SKPaint()
+                    {
+                        Color = SKColors.Black,
+                        IsAntialias = true,
+                        Style = SKPaintStyle.StrokeAndFill,
+                        TextSize = 48
+                    },
+                    YAxisMaxTicks = 3,
+                    YAxisLabelFormatter = f => $"{f} $",
+                    YAxisPosition = Position.Left,                    
                     ValueLabelOption = ValueLabelOption.TopOfElement,
                     LegendOption = SeriesLegendOption.Bottom,
                     Series = new List<ChartSerie>()
@@ -157,6 +168,17 @@ namespace Microcharts.Samples
                 },
                 new PointChart
                 {
+                    ShowYAxisText = true,
+                    YAxisTextPaint = new SKPaint()
+                    {
+                        Color = SKColors.Black,
+                        IsAntialias = true,
+                        Style = SKPaintStyle.StrokeAndFill,
+                        TextSize = 48
+                    },
+                    YAxisMaxTicks = 3,
+                    YAxisLabelFormatter = f => $"{f} $",
+                    YAxisPosition = Position.Left,
                     LabelOrientation = Orientation.Horizontal,
                     ValueLabelOrientation = Orientation.Horizontal,
                     LabelTextSize = 42,
@@ -187,6 +209,17 @@ namespace Microcharts.Samples
                 },
                 new LineChart
                 {
+                    ShowYAxisText = true,
+                    YAxisTextPaint = new SKPaint()
+                    {
+                        Color = SKColors.Black,
+                        IsAntialias = true,
+                        Style = SKPaintStyle.StrokeAndFill,
+                        TextSize = 48
+                    },
+                    YAxisMaxTicks = 3,
+                    YAxisLabelFormatter = f => $"{f} $",
+                    YAxisPosition = Position.Left,
                     LabelOrientation = Orientation.Horizontal,
                     ValueLabelOrientation = Orientation.Horizontal,
                     LabelTextSize = 42,
@@ -1570,7 +1603,7 @@ namespace Microcharts.Samples
                     ValueLabel = "600",
                     Color = SKColor.Parse("#32a852")
                 },
-                new ChartEntry(600)
+                new ChartEntry(1600)
                 {
                     Label = "Week 5",
                     ValueLabel = "1600",
@@ -1580,22 +1613,56 @@ namespace Microcharts.Samples
 
             return new Chart[]
             {
-                new LegacyBarChart
+                new LineChart
                 {
+                    ShowYAxisText = true,
+                    YAxisTextPaint = new SKPaint()
+                    {
+                        Color = SKColors.Black,
+                        IsAntialias = true,
+                        Style = SKPaintStyle.StrokeAndFill,
+                        TextSize = 48
+                    },
+                    YAxisMaxTicks = 3,
+                    XAxisMaxLabels = 3,
+                    YAxisLabelFormatter = f => $"{f} $",
+                    YAxisPosition = Position.Left,
                     Entries = entries,
                     LabelTextSize = 55,
                     LabelOrientation = Orientation.Horizontal,
                     Margin = 10
                 },
-                new LegacyPointChart
+                new PointChart
                 {
+                    ShowYAxisText = true,
+                    YAxisTextPaint = new SKPaint()
+                    {
+                        Color = SKColors.Black,
+                        IsAntialias = true,
+                        Style = SKPaintStyle.StrokeAndFill,
+                        TextSize = 48
+                    },
+                    YAxisMaxTicks = 3,
+                    YAxisLabelFormatter = f => $"{f} $",
+                    YAxisPosition = Position.Left,
                     Entries = entries,
                     LabelTextSize = 55,
                     LabelOrientation = Orientation.Horizontal,
                     Margin = 10
                 },
-                new LegacyLineChart
+                new BarChart
                 {
+                    ShowYAxisText = true,
+                    YAxisTextPaint = new SKPaint()
+                    {
+                        Color = SKColors.Black,
+                        IsAntialias = true,
+                        Style = SKPaintStyle.StrokeAndFill,
+                        TextSize = 48
+                    },
+                    YAxisMaxTicks = 3,
+                    YAxisLabelFormatter = f => $"{f} $",
+                    YAxisPosition = Position.Left,
                     Entries = entries,
                     LabelTextSize = 55,
                     LabelOrientation = Orientation.Horizontal,

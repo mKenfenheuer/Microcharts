@@ -97,7 +97,7 @@ namespace Microcharts
                     niceMin = minValue;
                     niceMax = maxValue;
                     range = niceMax - niceMin;
-                    tickSpacing = range / (yAxisMaxTicks-1);
+                    tickSpacing = range / (yAxisMaxTicks - 1);
                     ticks = yAxisMaxTicks;
                 }
 
@@ -115,6 +115,60 @@ namespace Microcharts
 
                 // to reduce chart width
                 width = yAxisWidth;
+                maxValue = (float)niceMax;
+                minValue = (float)niceMin;
+            }
+
+            return width;
+        }
+
+        internal static int CalculateXAxis(bool showXAxisText, bool showXAxisLines, IEnumerable<ChartEntry> entries, System.Func<float, string> xAxisLabelFormatter, int xAxisMaxTicks, SKPaint xAxisTextPaint, Position xAxisPosition, int width, bool fixedRange, ref float maxValue, ref float minValue, out float yAxisYShift, out List<float> xAxisIntervalLabels)
+        {
+            yAxisYShift = 0.0f;
+            xAxisIntervalLabels = new List<float>();
+            if (showXAxisText || showXAxisLines)
+            {
+                var xAxisHeight = width;
+                double range, niceMin, niceMax, tickSpacing;
+                int ticks;
+
+                if (!fixedRange)
+                {
+                    //var enumerable = entries.ToList(); // to avoid double enumeration
+                    if (minValue == maxValue)
+                    {
+                        if (minValue >= 0)
+                            maxValue += 100;
+                        else
+                            maxValue = 0;
+                    }
+
+                    NiceScale.Calculate(minValue, maxValue, xAxisMaxTicks, out range, out tickSpacing, out niceMin, out niceMax);
+                    ticks = (int)(range / tickSpacing);
+                }
+                else
+                {
+                    niceMin = minValue;
+                    niceMax = maxValue;
+                    range = niceMax - niceMin;
+                    tickSpacing = range / (xAxisMaxTicks - 1);
+                    ticks = xAxisMaxTicks;
+                }
+
+                xAxisIntervalLabels = Enumerable.Range(0, ticks)
+                    .Select(i => (float)(niceMax - (i * tickSpacing)))
+                    .ToList();
+
+                var labels = xAxisIntervalLabels.Select(t => xAxisLabelFormatter(t) + "Z").ToArray();
+                var tallestXAxisLabelHeight = MeasureHelper.MeasureTexts(labels, xAxisTextPaint).Max(b => b.Height);
+                xAxisHeight = (int)(width - tallestXAxisLabelHeight);
+                if (xAxisPosition == Position.Left)
+                {
+                    yAxisYShift = tallestXAxisLabelHeight;
+                }
+
+                // to reduce chart width
+                width = xAxisHeight;
                 maxValue = (float)niceMax;
                 minValue = (float)niceMin;
             }

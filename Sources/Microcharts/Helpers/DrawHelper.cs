@@ -17,7 +17,7 @@ namespace Microcharts
     internal static class DrawHelper
     {
         
-        internal static void DrawLabel(SKCanvas canvas, Orientation orientation, YPositionBehavior yPositionBehavior, SKSize itemSize, SKPoint point, SKColor color, SKRect bounds, string text, float textSize, SKTypeface typeface)
+        internal static void DrawLabel(SKCanvas canvas, Orientation orientation, YPositionBehavior yPositionBehavior, SKSize itemSize, SKPoint point, SKColor color, SKRect bounds, string text, float textSize, SKTypeface typeface, bool cutLabel = true)
         {
             using (new SKAutoCanvasRestore(canvas))
             {
@@ -42,7 +42,7 @@ namespace Microcharts
                                 y -= bounds.Width / 2;
                                 break;
                             case YPositionBehavior.DownToElementMiddle:
-                                y += bounds.Width / 2;
+                                y += bounds.Width;
                                 break;
                             case YPositionBehavior.None:
                             default:
@@ -54,13 +54,13 @@ namespace Microcharts
                     }
                     else
                     {
-                        if (bounds.Width > itemSize.Width)
+                        if (bounds.Width > itemSize.Width && cutLabel)
                         {
                             text = text.Substring(0, Math.Min(3, text.Length));
                             paint.MeasureText(text, ref bounds);
                         }
 
-                        if (bounds.Width > itemSize.Width)
+                        if (bounds.Width > itemSize.Width && cutLabel)
                         {
                             text = text.Substring(0, Math.Min(1, text.Length));
                             paint.MeasureText(text, ref bounds);

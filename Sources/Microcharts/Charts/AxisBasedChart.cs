@@ -160,11 +160,15 @@ namespace Microcharts
         /// </summary>
         public Func<float, string> YAxisLabelFormatter { get; set; } = f => f.ToString();
 
-        
+
         /// <summary>
-        /// Y Axis Max Ticks
+        /// X Axis Max Labels
         /// </summary>
         public int XAxisMaxLabels { get; set; } = 5;
+        /// <summary>
+        /// Cut Labels if too lon??
+        /// </summary>
+        public bool XAxisLabelCut { get; set; }
 
         #endregion
 
@@ -240,7 +244,9 @@ namespace Microcharts
                         {
                             space += labelSpacing;
                             SKRect labelSize = labelSizes[i];
-                            DrawHelper.DrawLabel(canvas, LabelOrientation, YPositionBehavior.None, itemSize, new SKPoint(itemX, height - footerWithLegendHeight + Margin + labelSize.Height), LabelColor, labelSize, label, LabelTextSize, Typeface);
+                            var labelx = Math.Min(itemX, DrawableChartArea.Width - (LabelOrientation == Orientation.Vertical ? labelSize.Height : labelSize.Width) / 2 - Margin - 3);
+                            labelx = Math.Max(labelx, yAxisXShift + (LabelOrientation == Orientation.Vertical ? labelSize.Height : labelSize.Width) / 2 - Margin - 3);
+                            DrawHelper.DrawLabel(canvas, LabelOrientation, YPositionBehavior.None, itemSize, new SKPoint(labelx, height - footerWithLegendHeight + Margin + labelSize.Height), LabelColor, labelSize, label, LabelTextSize, Typeface, XAxisLabelCut);
                         }
                     }
 
